@@ -12,8 +12,8 @@ export function useBingoEvents({ zip, state }) {
 
     useEffect(() => {
         async function fetchData() {
-            // Case 1: Neither Zip (valid length) nor State is selected
-            if ((!zip || zip.length < 5) && !state) {
+            // Case 1: Neither Zip/City (min 3 characters) nor State is selected
+            if ((!zip || zip.trim().length < 3) && !state) {
                 setResults([]);
                 return;
             }
@@ -50,39 +50,114 @@ export function useBingoEvents({ zip, state }) {
                     return;
                 }
 
-                // Case 3: Filter by Zip (Radius of 25 miles for events)
-                if (zip && zip.length >= 5) {
-                    const cleanZip = zip.replace(/\D/g, '').substring(0, 5);
-                    const lookupZip = parseInt(cleanZip, 10);
+                // Case 3: Filter by Zip Code or City Name
+                if (zip && zip.trim().length >= 3) {
+                    const query = zip.trim().toLowerCase();
+                    const isNumeric = /^\d+$/.test(query);
 
-                    const userLocation = zipCodeDataCache.find(z => z.zip_code === lookupZip);
+                    if (isNumeric) {
+                        // Zip Code logic
+                        const cleanZip = query.replace(/\D/g, '').substring(0, 5);
+                        const lookupZip = parseInt(cleanZip, 10);
+                        const userLocation = zipCodeDataCache.find(z => z.zip_code === lookupZip);
 
-                    if (!userLocation) {
-                        setError('Zip code not found in our database.');
-                        setResults([]);
-                        setLoading(false);
-                        return;
-                    }
-
-                    const filtered = bingoDataCache.map(item => {
-                        // Default to 0 distance if coordinates are missing
-                        if (item.latitude === null || item.longitude === null) {
-                            return { ...item, distance: 9999 };
+                        if (!userLocation) {
+                            setError('Zip code not found in our database.');
+                            setResults([]);
+                            setLoading(false);
+                            return;
                         }
-                        const dist = calculateDistance(
-                            userLocation.latitude,
-                            userLocation.longitude,
-                            item.latitude,
-                            item.longitude
-                        );
-                        return { ...item, distance: dist };
-                    }).filter(item => item.distance <= 25) // Wider 25 mile radius for events
-                      .sort((a, b) => a.distance - b.distance);
 
-                    if (filtered.length === 0) {
-                        setError('No bingo events found within 25 miles of this zip code.');
+                        const filtered = bingoDataCache.map(item => {
+                            if (item.latitude === null || item.longitude === null) {
+                                return { ...item, distance: 9999 };
+                            }
+                            const dist = calculateDistance(
+                                userLocation.latitude,
+                                userLocation.longitude,
+                                item.latitude,
+                                item.longitude
+                            );
+                            return { ...item, distance: dist };
+                        }).filter(item => item.distance <= 25)
+                          .sort((a, b) => a.distance - b.distance);
+
+                        if (filtered.length === 0) {
+                            setError('No bingo events found within 25 miles of this zip code.');
+                        }
+                        setResults(filtered);
+                    } else {
+                        // City Name logic
+                        let cityPart = query;
+                        let statePart = '';
+                        if (query.includes(',')) {
+                            const parts = query.split(',');
+                            cityPart = parts[0].trim();
+                            statePart = parts[1].trim();
+                        }
+
+                        // Try to resolve coordinates for city center
+                        const userLocation = zipCodeDataCache.find(z => {
+                            const cityMatch = z.city.toLowerCase() === cityPart;
+                            if (statePart) {
+                                return cityMatch && z.state.toLowerCase() === statePart;
+                            }
+                            return cityMatch;
+                        });
+
+                        let radiusResults = [];
+                        if (userLocation) {
+                            radiusResults = bingoDataCache.map(item => {
+                                if (item.latitude === null || item.longitude === null) {
+                                    return { ...item, distance: 9999 };
+                                }
+                                const dist = calculateDistance(
+                                    userLocation.latitude,
+                                    userLocation.longitude,
+                                    item.latitude,
+                                    item.longitude
+                                );
+                                return { ...item, distance: dist };
+                            }).filter(item => item.distance <= 25);
+                        }
+
+                        // Text matching fallback/complement
+                        const textResults = bingoDataCache.filter(item => {
+                            const cityMatch = item.city.toLowerCase().includes(cityPart);
+                            const stateMatch = statePart ? item.state.toLowerCase() === statePart : true;
+                            
+                            return (
+                                (cityMatch && stateMatch) ||
+                                item.venue.toLowerCase().includes(cityPart) ||
+                                item.name.toLowerCase().includes(cityPart)
+                            );
+                        }).map(item => {
+                            const inRadius = radiusResults.find(r => r.id === item.id);
+                            return inRadius || { ...item, distance: 9999 };
+                        });
+
+                        // Merge & Deduplicate
+                        const mergedMap = new Map();
+                        radiusResults.forEach(r => mergedMap.set(r.id, r));
+                        textResults.forEach(t => {
+                            if (!mergedMap.has(t.id)) {
+                                mergedMap.set(t.id, t);
+                            }
+                        });
+
+                        const finalResults = Array.from(mergedMap.values())
+                            .sort((a, b) => {
+                                if (a.distance !== b.distance) {
+                                    return a.distance - b.distance;
+                                }
+                                return a.name.localeCompare(b.name);
+                            });
+
+                        if (finalResults.length === 0) {
+                            setError(`No bingo events found for "${zip}".`);
+                        }
+                        setResults(finalResults);
                     }
-                    setResults(filtered);
                 }
 
             } catch (err) {

@@ -7,6 +7,25 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const BINGO_DATA_FILE = path.join(__dirname, '../public/data/bingo_directory.json');
+const MANUAL_REVIEW_FILE = path.join(__dirname, '../public/data/manual_review.json');
+
+// Known LGBTQ+ friendly venues or gay bars where *any* bingo event is implicitly LGBTQ+ friendly
+const KNOWN_LGBTQ_VENUES = [
+  'tool shed',
+  'toolshed',
+  'hunters',
+  'chill bar',
+  'one eleven bar',
+  'one-eleven bar',
+  'the joint by prc',
+  'the garden nightclub',
+  'hamburger mary',
+  'detour',
+  'gossip grill',
+  'urban mo',
+  'v wine lounge',
+  'boozehounds'
+];
 
 // List of cities and states to scrape for drag/LGBTQ+ friendly bingo
 const SEARCH_TARGETS = [
@@ -17,11 +36,54 @@ const SEARCH_TARGETS = [
 ];
 
 const DELAY_MS = 4000; // Delay to prevent rate limiting
-
-// Standard user agent
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Keep track of new manual review items in the current run
+const newManualReviewItems = [];
+
+// Check if an event matches relevance rules
+function checkEventRelevance(name, description, schedule, venue) {
+  const nameText = (name || '').toLowerCase();
+  const descText = (description || '').toLowerCase();
+  const scheduleText = (schedule || '').toLowerCase();
+  const venueText = (venue || '').toLowerCase();
+
+  const hasBingoInName = nameText.includes('bingo');
+
+  // Check if the venue is a known LGBTQ+ bar/business
+  const isKnownLgbtqVenue = KNOWN_LGBTQ_VENUES.some(v => venueText.includes(v));
+
+  const hasKeywords = nameText.includes('drag') || nameText.includes('lgbt') || 
+                      descText.includes('drag') || descText.includes('lgbt') ||
+                      isKnownLgbtqVenue;
+  
+  const isAnnual = nameText.includes('annual') || descText.includes('annual') || scheduleText.includes('annual');
+
+  const daysPattern = /(every|each|weekly|monthly|monday|tuesday|wednesday|thursday|friday|saturday|sunday|mon|tue|wed|thu|fri|sat|sun|1st|2nd|3rd|4th|last|regularly)/i;
+  const hasRecurring = daysPattern.test(scheduleText) || 
+                       daysPattern.test(nameText) || 
+                       descText.includes('every') || 
+                       descText.includes('weekly') || 
+                       descText.includes('monthly') ||
+                       daysPattern.test(descText);
+
+  if (!hasBingoInName) {
+    return { relevant: false, reason: "No 'bingo' in event name" };
+  }
+  if (!hasKeywords) {
+    return { relevant: false, reason: "Missing 'drag' or 'lgbt' keywords" };
+  }
+  if (isAnnual) {
+    return { relevant: false, reason: "Annual event (not weekly or monthly)" };
+  }
+  if (!hasRecurring) {
+    return { relevant: false, reason: "Not verified as weekly or monthly recurring event" };
+  }
+
+  return { relevant: true };
+}
 
 // Helper to scrape search results from Bing
 async function searchBing(query) {
@@ -78,10 +140,10 @@ function saveBingoListing(listing) {
     }
   }
 
-  // Check if a listing with a very similar name/website already exists
+  // Check if a listing with a very similar name and city already exists
   const isDuplicate = data.some(item => 
-    (item.name.toLowerCase() === listing.name.toLowerCase() && item.city === listing.city) ||
-    (listing.website && item.website === listing.website)
+    item.name.toLowerCase() === listing.name.toLowerCase() && 
+    item.city.toLowerCase() === listing.city.toLowerCase()
   );
 
   if (!isDuplicate) {
@@ -91,8 +153,47 @@ function saveBingoListing(listing) {
     fs.writeFileSync(BINGO_DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
     console.log(`✅ Saved new listing: "${listing.name}" in ${listing.city}, ${listing.state}`);
   } else {
-    console.log(`⚠️ Listing or website already exists, skipping: "${listing.name}"`);
+    console.log(`⚠️ Listing already exists, skipping: "${listing.name}"`);
   }
+}
+
+// Add items that do not meet the direct ingestion criteria to the manual review list
+function saveManualReviewListing(listing, reason) {
+  let manualData = [];
+  if (fs.existsSync(MANUAL_REVIEW_FILE)) {
+    try {
+      manualData = JSON.parse(fs.readFileSync(MANUAL_REVIEW_FILE, 'utf-8'));
+    } catch (e) {
+      console.error('Error reading manual review file, starting fresh.');
+    }
+  }
+
+  // Also read standard directory data to make sure we don't put already verified/saved items in the manual review list
+  let directoryData = [];
+  if (fs.existsSync(BINGO_DATA_FILE)) {
+    try {
+      directoryData = JSON.parse(fs.readFileSync(BINGO_DATA_FILE, 'utf-8'));
+    } catch (e) {}
+  }
+
+  // Check if a listing with similar name and city already exists in manual review or directory
+  const isDuplicate = manualData.some(item => 
+    item.name.toLowerCase() === listing.name.toLowerCase() && 
+    item.city.toLowerCase() === listing.city.toLowerCase()
+  ) || directoryData.some(item => 
+    item.name.toLowerCase() === listing.name.toLowerCase() && 
+    item.city.toLowerCase() === listing.city.toLowerCase()
+  );
+
+  if (!isDuplicate) {
+    listing.reason = reason;
+    listing.scraped_at = new Date().toISOString().split('T')[0];
+    manualData.push(listing);
+    fs.writeFileSync(MANUAL_REVIEW_FILE, JSON.stringify(manualData, null, 2), 'utf-8');
+    console.log(`⚠️ Flagged for manual review: "${listing.name}" (${reason})`);
+    return true; // Newly added
+  }
+  return false;
 }
 
 // Scrape Gay Desert Guide specifically for Palm Springs bingo events
@@ -146,8 +247,10 @@ async function scrapeGayDesertGuide() {
         if (titleText.toLowerCase().includes('disco')) categories.push('disco');
         if (titleText.toLowerCase().includes('tunes') || titleText.toLowerCase().includes('music')) categories.push('music');
 
+        const nameVal = titleText.split(' at ')[0].split(' | ')[0].split(' / ')[0].trim();
+
         const listing = {
-          name: titleText.split(' at ')[0].split(' | ')[0].split(' / ')[0].trim(),
+          name: nameVal,
           venue: venue,
           address: address,
           city: 'Palm Springs',
@@ -162,7 +265,16 @@ async function scrapeGayDesertGuide() {
           notes: notes
         };
         
-        saveBingoListing(listing);
+        // Relevance Check
+        const check = checkEventRelevance(nameVal, notes, schedule, venue);
+        if (check.relevant) {
+          saveBingoListing(listing);
+        } else {
+          const added = saveManualReviewListing(listing, check.reason);
+          if (added) {
+            newManualReviewItems.push({ ...listing, reason: check.reason });
+          }
+        }
         
       } catch (err) {
         console.error(`Error parsing event details for ${event.url}:`, err.message);
@@ -199,7 +311,6 @@ async function runScraper() {
 
       for (const res of results) {
         // Simple heuristic rules to extract venue or event name from search result title
-        // e.g. "Drag Queen Bingo at The Garden Nightclub - Eventbrite" -> Name: Drag Queen Bingo, Venue: The Garden Nightclub
         let name = res.title;
         let venue = 'Unknown Venue';
 
@@ -220,10 +331,6 @@ async function runScraper() {
         // Clean event name if it has platform names
         name = name.replace(/(Eventbrite|Facebook|Meetup|Ticketmaster)/gi, '').trim();
         venue = venue.replace(/(Eventbrite|Facebook|Meetup|Ticketmaster)/gi, '').trim();
-
-        // Ensure we only save relevant-looking results
-        const isRelevant = res.title.toLowerCase().includes('bingo') || res.description.toLowerCase().includes('bingo');
-        if (!isRelevant) continue;
 
         const categories = [];
         if (res.title.toLowerCase().includes('drag') || res.description.toLowerCase().includes('drag')) {
@@ -252,12 +359,36 @@ async function runScraper() {
           notes: res.description || 'Drag/LGBTQ+ friendly bingo event.'
         };
 
-        saveBingoListing(listing);
+        // Relevance Check
+        const check = checkEventRelevance(name, res.description, 'Check website for schedule', venue);
+        if (check.relevant) {
+          saveBingoListing(listing);
+        } else {
+          const added = saveManualReviewListing(listing, check.reason);
+          if (added) {
+            newManualReviewItems.push({ ...listing, reason: check.reason });
+          }
+        }
       }
 
       console.log(`Sleeping to avoid rate limits...`);
       await sleep(DELAY_MS);
     }
+  }
+
+  console.log('\n========================================');
+  console.log(`📋 CURRENT RUN - MANUAL REVIEW SITES (${newManualReviewItems.length} new):`);
+  console.log('========================================');
+  if (newManualReviewItems.length === 0) {
+    console.log('No new sites flagged for manual review.');
+  } else {
+    newManualReviewItems.forEach((item, index) => {
+      console.log(`[${index + 1}] Name: ${item.name}`);
+      console.log(`    Venue: ${item.venue || 'N/A'} (${item.city || 'N/A'}, ${item.state || 'N/A'})`);
+      console.log(`    Website: ${item.website}`);
+      console.log(`    Reason: ${item.reason}`);
+      console.log('----------------------------------------');
+    });
   }
 
   console.log('\n🏁 Scraper completed successfully!');

@@ -83,7 +83,7 @@ export function SearchPage() {
     return (
         <>
             <div className="text-center mb-12 animate-fade-in-down">
-                <SEO />
+                <SEO events={results} />
                 {/* Hero Image */}
                 <div className="flex justify-center mb-8">
                     <img
@@ -99,7 +99,7 @@ export function SearchPage() {
                     Connect with your community, find weekly drag events, and support local venues.
                 </h2>
                 <p className="text-slate-600 text-xl md:text-2xl font-normal tracking-wide max-w-2xl mx-auto">
-                    Search by Zip Code to find weekly shows, pride events, and friendly neighborhood bingo night listings.
+                    Search by Zip Code or City to find weekly shows, pride events, and friendly neighborhood bingo night listings.
                     <span className="text-slate-600 text-base mt-2 block">Powered by Geospatial Search</span>
                 </p>
             </div>
@@ -127,7 +127,7 @@ export function SearchPage() {
             {/* Empty State / Welcome Message if no search */}
             {!zipCode && !selectedState && !loading && !error && (
                 <div className="mt-12 text-slate-800 text-lg font-medium text-center">
-                    Try entering <span className="text-teal-700 cursor-pointer hover:underline" onClick={() => handleZipChange('50309')}>50309</span> (IA)
+                    Try entering <span className="text-teal-700 cursor-pointer hover:underline" onClick={() => handleZipChange('Palm Springs')}>Palm Springs</span>, <span className="text-teal-700 cursor-pointer hover:underline" onClick={() => handleZipChange('50309')}>50309</span>,
                     or select <span className="text-pink-700 cursor-pointer hover:underline" onClick={() => handleStateChange('IA')}>Iowa</span>
                 </div>
             )}

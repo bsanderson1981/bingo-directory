@@ -20,10 +20,10 @@ export function SearchBar({ zip, onZipChange, selectedState, onStateChange }) {
                     <input
                         type="text"
                         className="block w-full pl-10 pr-3 py-4 border border-slate-300 rounded-2xl bg-white text-black placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-600 shadow-sm transition-all duration-300 text-xl"
-                        placeholder="Enter Zip Code (e.g. 90210)"
+                        placeholder="Enter Zip Code or City (e.g. Palm Springs or 90210)"
                         value={zip}
                         onChange={(e) => onZipChange(e.target.value)}
-                        maxLength={10}
+                        maxLength={50}
                     />
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                         {zip && zip.length >= 5 && (
@@ -64,7 +64,7 @@ export function SearchBar({ zip, onZipChange, selectedState, onStateChange }) {
 
             {/* Radius Helper Text - Moved outside flex row to preserve alignment */}
             <div className="mt-2 text-sm text-slate-700 font-medium w-full text-center">
-                We will return centers within 10 miles of the zip code entered
+                We will find bingo events within 25 miles of the entered city or zip code
             </div>
         </div>
     );
