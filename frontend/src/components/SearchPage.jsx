@@ -87,8 +87,8 @@ export function SearchPage() {
                 {/* Hero Image */}
                 <div className="flex justify-center mb-8">
                     <img
-                        src="/hero.jpg"
-                        alt="Senior Citizens and Community Members Smiling"
+                        src="/hero.png"
+                        alt="A diverse crowd of all ages, genders, and races enjoying a lively Drag Queen Bingo night with a drag performer"
                         className="rounded-2xl shadow-lg max-w-full h-auto w-[300px] object-cover"
                     />
                 </div>
