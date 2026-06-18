@@ -74,13 +74,19 @@ function App() {
               Terms of Use
             </Link>
             <span className="text-slate-300">|</span>
-
             <Link
               to="/contact"
               className="hover:text-teal-600 transition-colors underline"
             >
               Contact Us
             </Link>
+            <span className="text-slate-300">|</span>
+            <a
+              href="/2mancheck.hmtl"
+              className="hover:text-teal-600 transition-colors underline"
+            >
+              Manual Review List
+            </a>
           </div>
         </footer>
       </div>

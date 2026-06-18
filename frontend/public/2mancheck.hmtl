@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Review Checklist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+    </style>
+</head>
+<body class="p-8 max-w-7xl mx-auto">
+    <header class="mb-10 text-center">
+        <h1 class="text-4xl font-extrabold text-teal-400 mb-2">📋 Manual Review Checklist</h1>
+        <p class="text-slate-400 text-lg">Below are scraped events that did not meet the direct ingestion criteria. Review them manually before adding.</p>
+        <div class="mt-4 flex justify-center gap-4">
+            <a href="/" class="text-teal-400 hover:underline font-bold">&larr; Back to Directory Search</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Controls -->
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg mb-8 flex flex-wrap gap-4 items-center justify-between">
+            <div class="flex gap-4 items-center">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-1">Filter by Reason</label>
+                    <select id="reason-filter" class="bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-2 focus:ring-2 focus:ring-teal-500">
+                        <option value="">All Reasons</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-1">Filter by City</label>
+                    <select id="city-filter" class="bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-2 focus:ring-2 focus:ring-teal-500">
+                        <option value="">All Cities</option>
+                    </select>
+                </div>
+            </div>
+            <div class="text-slate-400 font-semibold" id="stats">
+                Showing 0 of 0 events
+            </div>
+        </div>
+
+        <!-- Events List -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="events-grid">
+            <!-- Dynamic items go here -->
+        </div>
+    </main>
+
+    <script>
+        let allEvents = [];
+
+        async function loadEvents() {
+            try {
+                const response = await fetch('/data/manual_review.json');
+                if (!response.ok) throw new Error('Failed to load manual review data');
+                allEvents = await response.json();
+                
+                populateFilters();
+                renderEvents();
+            } catch (err) {
+                console.error(err);
+                document.getElementById('events-grid').innerHTML = `
+                    <div class="col-span-full bg-red-900/50 border border-red-700 text-red-200 p-6 rounded-2xl text-center">
+                        <h2 class="text-xl font-bold mb-2">Error Loading Data</h2>
+                        <p>${err.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function populateFilters() {
+            const reasons = new Set();
+            const cities = new Set();
+
+            allEvents.forEach(item => {
+                if (item.reason) reasons.add(item.reason);
+                if (item.city) cities.add(item.city);
+            });
+
+            const reasonSelect = document.getElementById('reason-filter');
+            reasons.forEach(reason => {
+                const opt = document.createElement('option');
+                opt.value = reason;
+                opt.textContent = reason;
+                reasonSelect.appendChild(opt);
+            });
+
+            const citySelect = document.getElementById('city-filter');
+            cities.forEach(city => {
+                const opt = document.createElement('option');
+                opt.value = city;
+                opt.textContent = city;
+                citySelect.appendChild(opt);
+            });
+
+            reasonSelect.addEventListener('change', renderEvents);
+            citySelect.addEventListener('change', renderEvents);
+        }
+
+        function renderEvents() {
+            const reasonFilter = document.getElementById('reason-filter').value;
+            const cityFilter = document.getElementById('city-filter').value;
+            const grid = document.getElementById('events-grid');
+            
+            const filtered = allEvents.filter(item => {
+                const matchesReason = reasonFilter ? item.reason === reasonFilter : true;
+                const matchesCity = cityFilter ? item.city === cityFilter : true;
+                return matchesReason && matchesCity;
+            });
+
+            document.getElementById('stats').textContent = `Showing ${filtered.length} of ${allEvents.length} events`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-slate-800 p-8 rounded-2xl border border-slate-700 text-center text-slate-400">
+                        No events match current filters.
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => {
+                const badgeColor = item.reason && item.reason.includes('Annual') ? 'bg-amber-900/60 text-amber-300 border-amber-800' : 'bg-red-900/60 text-red-300 border-red-800';
+                
+                return `
+                    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-md hover:shadow-xl hover:border-slate-600 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start gap-2 mb-3">
+                                <span class="text-xs font-bold px-2 py-1 rounded-md border ${badgeColor}">
+                                    ${item.reason || 'Flagged'}
+                                </span>
+                                <span class="text-xs text-slate-500 font-semibold">${item.scraped_at || 'Recently'}</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2 leading-tight">${item.name || 'Bingo Event'}</h3>
+                            <p class="text-slate-400 text-sm font-semibold mb-2">📍 ${item.venue || 'Unknown Venue'} (${item.city || 'N/A'}, ${item.state || 'N/A'})</p>
+                            <p class="text-slate-400 text-sm mb-4 line-clamp-3">${item.notes || 'No description available.'}</p>
+                        </div>
+                        <div class="border-t border-slate-700 pt-4 mt-auto">
+                            <a href="${item.website}" target="_blank" class="w-full inline-flex justify-center items-center px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl transition-colors text-sm">
+                                View Event Page &rarr;
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.addEventListener('DOMContentLoaded', loadEvents);
+    </script>
+</body>
+</html>
