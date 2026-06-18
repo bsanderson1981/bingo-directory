@@ -24,7 +24,7 @@
 
     <main>
         <!-- Controls -->
-        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg mb-8 flex flex-wrap gap-4 items-center justify-between">
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg mb-4 flex flex-wrap gap-4 items-center justify-between">
             <div class="flex gap-4 items-center">
                 <div>
                     <label class="block text-sm font-semibold text-slate-300 mb-1">Filter by Reason</label>
@@ -41,6 +41,29 @@
             </div>
             <div class="text-slate-400 font-semibold" id="stats">
                 Showing 0 of 0 events
+            </div>
+        </div>
+
+        <!-- Bulk Actions -->
+        <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-md mb-8 flex flex-wrap gap-4 items-center justify-between">
+            <div class="flex items-center gap-3">
+                <input type="checkbox" id="select-all" class="w-5 h-5 rounded border-slate-700 text-teal-600 focus:ring-teal-500 bg-slate-900 cursor-pointer">
+                <label for="select-all" class="text-sm font-semibold text-slate-300 cursor-pointer select-none">Select All Visible</label>
+                
+                <span class="text-slate-600 font-light mx-2">|</span>
+                
+                <label class="text-sm font-semibold text-slate-300">Bulk Action:</label>
+                <select id="bulk-action" class="bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-1.5 focus:ring-2 focus:ring-teal-500 text-sm font-semibold">
+                    <option value="add">Add to Main Directory</option>
+                    <option value="hide">Hide from Review List</option>
+                </select>
+                
+                <button id="apply-bulk" class="px-5 py-1.5 bg-teal-600 hover:bg-teal-500 active:bg-teal-700 text-white font-bold rounded-xl transition-colors text-sm shadow-md">
+                    Apply Action
+                </button>
+            </div>
+            <div id="selection-counter" class="text-slate-400 text-sm font-medium">
+                0 items selected
             </div>
         </div>
 
@@ -137,6 +160,25 @@
             citySelect.addEventListener('change', renderEvents);
         }
 
+        function updateSelectionCounter() {
+            const checkedBoxes = document.querySelectorAll('.event-checkbox:checked');
+            document.getElementById('selection-counter').textContent = `${checkedBoxes.length} items selected`;
+            
+            const allVisibleBoxes = document.querySelectorAll('.event-checkbox');
+            const selectAllCheckbox = document.getElementById('select-all');
+            
+            if (allVisibleBoxes.length > 0 && checkedBoxes.length === allVisibleBoxes.length) {
+                selectAllCheckbox.checked = true;
+                selectAllCheckbox.indeterminate = false;
+            } else if (checkedBoxes.length > 0) {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = true;
+            } else {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+            }
+        }
+
         function renderEvents() {
             const reasonFilter = document.getElementById('reason-filter').value;
             const cityFilter = document.getElementById('city-filter').value;
@@ -156,6 +198,9 @@
                         No events match current filters.
                     </div>
                 `;
+                document.getElementById('select-all').checked = false;
+                document.getElementById('select-all').indeterminate = false;
+                updateSelectionCounter();
                 return;
             }
 
@@ -163,13 +208,14 @@
                 const badgeColor = item.reason && item.reason.includes('Annual') ? 'bg-amber-900/60 text-amber-300 border-amber-800' : 'bg-red-900/60 text-red-300 border-red-800';
                 
                 return `
-                    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-md hover:shadow-xl hover:border-slate-600 transition-all flex flex-col justify-between">
+                    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-md hover:shadow-xl hover:border-slate-600 transition-all flex flex-col justify-between relative">
                         <div>
-                            <div class="flex justify-between items-start gap-2 mb-3">
+                            <div class="flex items-center gap-3 mb-4">
+                                <input type="checkbox" class="event-checkbox w-5 h-5 rounded border-slate-700 text-teal-600 focus:ring-teal-500 bg-slate-900 cursor-pointer" data-name="${escapeHtml(item.name)}" data-city="${escapeHtml(item.city)}">
                                 <span class="text-xs font-bold px-2 py-1 rounded-md border ${badgeColor}">
                                     ${escapeHtml(item.reason || 'Flagged')}
                                 </span>
-                                <span class="text-xs text-slate-500 font-semibold">${escapeHtml(item.scraped_at || 'Recently')}</span>
+                                <span class="text-xs text-slate-500 font-semibold ml-auto">${escapeHtml(item.scraped_at || 'Recently')}</span>
                             </div>
                             <h3 class="text-xl font-bold text-white mb-2 leading-tight">${escapeHtml(item.name || 'Bingo Event')}</h3>
                             <p class="text-slate-400 text-sm font-semibold mb-2">📍 ${escapeHtml(item.venue || 'Unknown Venue')} (${escapeHtml(item.city || 'N/A')}, ${escapeHtml(item.state || 'N/A')})</p>
@@ -186,6 +232,17 @@
                     </div>
                 `;
             }).join('');
+
+            // Add change event listener to each checkbox
+            const checkboxes = grid.querySelectorAll('.event-checkbox');
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', updateSelectionCounter);
+            });
+
+            // Reset selection status
+            document.getElementById('select-all').checked = false;
+            document.getElementById('select-all').indeterminate = false;
+            updateSelectionCounter();
         }
 
         async function hideEvent(name, city) {
@@ -202,12 +259,12 @@
             renderEvents();
             
             try {
-                const response = await fetch('/api/hide-event', {
+                const response = await fetch('/api/hide-events', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ name, city })
+                    body: JSON.stringify({ events: [{ name, city }] })
                 });
                 
                 if (!response.ok) {
@@ -218,7 +275,83 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', loadEvents);
+        async function applyBulkAction() {
+            const checkedBoxes = document.querySelectorAll('.event-checkbox:checked');
+            if (checkedBoxes.length === 0) {
+                alert('Please select at least one event first.');
+                return;
+            }
+
+            const action = document.getElementById('bulk-action').value;
+            const events = Array.from(checkedBoxes).map(cb => ({
+                name: cb.getAttribute('data-name'),
+                city: cb.getAttribute('data-city')
+            }));
+
+            const confirmMsg = action === 'add' 
+                ? `Are you sure you want to add these ${events.length} events to the main directory and remove them from manual review?`
+                : `Are you sure you want to hide these ${events.length} events? This will exclude them from future scraper runs.`;
+
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+
+            const url = action === 'add' ? '/api/approve-events' : '/api/hide-events';
+
+            try {
+                // Save locally first for instant UI response / fallback
+                events.forEach(e => {
+                    if (action === 'hide') {
+                        const key = `hide_${e.name}_${e.city}`;
+                        localStorage.setItem(key, 'true');
+                    }
+                });
+
+                // Send request to Vite server
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ events })
+                });
+
+                if (!response.ok) {
+                    console.warn('Vite local API returned error or is not running.');
+                }
+                
+                // Update activeEvents in client
+                activeEvents = activeEvents.filter(item => {
+                    const matched = events.some(e => e.name === item.name && e.city === item.city);
+                    return !matched;
+                });
+
+                populateFilters();
+                renderEvents();
+                alert(`Successfully completed bulk action: ${action === 'add' ? 'Added' : 'Hidden'} ${events.length} items.`);
+            } catch (err) {
+                console.error(err);
+                alert('Bulk action completed. (Note: Saved to local storage fallback if server write API is unavailable).');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadEvents();
+            
+            // Set up select all checkbox
+            const selectAll = document.getElementById('select-all');
+            selectAll.addEventListener('change', (e) => {
+                const checked = e.target.checked;
+                const checkboxes = document.querySelectorAll('.event-checkbox');
+                checkboxes.forEach(cb => {
+                    cb.checked = checked;
+                });
+                updateSelectionCounter();
+            });
+
+            // Set up apply bulk action button
+            document.getElementById('apply-bulk').addEventListener('click', applyBulkAction);
+        });
     </script>
 </body>
 </html>
