@@ -82,7 +82,7 @@ function App() {
             </Link>
             <span className="text-slate-300">|</span>
             <a
-              href="/2mancheck.hmtl"
+              href="/2mancheck.html"
               className="hover:text-teal-600 transition-colors underline"
             >
               Manual Review List
