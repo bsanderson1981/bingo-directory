@@ -52,12 +52,32 @@
 
     <script>
         let allEvents = [];
+        let activeEvents = [];
+
+        function isHidden(item) {
+            if (item.hidden) return true;
+            const key = `hide_${item.name}_${item.city}`;
+            return localStorage.getItem(key) === 'true';
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
 
         async function loadEvents() {
             try {
                 const response = await fetch('/data/manual_review.json');
                 if (!response.ok) throw new Error('Failed to load manual review data');
                 allEvents = await response.json();
+                
+                // Filter out hidden items
+                activeEvents = allEvents.filter(item => !isHidden(item));
                 
                 populateFilters();
                 renderEvents();
@@ -73,15 +93,21 @@
         }
 
         function populateFilters() {
+            const reasonSelect = document.getElementById('reason-filter');
+            const citySelect = document.getElementById('city-filter');
+            
+            const savedReason = reasonSelect.value;
+            const savedCity = citySelect.value;
+
             const reasons = new Set();
             const cities = new Set();
 
-            allEvents.forEach(item => {
+            activeEvents.forEach(item => {
                 if (item.reason) reasons.add(item.reason);
                 if (item.city) cities.add(item.city);
             });
 
-            const reasonSelect = document.getElementById('reason-filter');
+            reasonSelect.innerHTML = '<option value="">All Reasons</option>';
             reasons.forEach(reason => {
                 const opt = document.createElement('option');
                 opt.value = reason;
@@ -89,7 +115,7 @@
                 reasonSelect.appendChild(opt);
             });
 
-            const citySelect = document.getElementById('city-filter');
+            citySelect.innerHTML = '<option value="">All Cities</option>';
             cities.forEach(city => {
                 const opt = document.createElement('option');
                 opt.value = city;
@@ -97,6 +123,16 @@
                 citySelect.appendChild(opt);
             });
 
+            // Restore selection if it's still available
+            if (reasons.has(savedReason)) {
+                reasonSelect.value = savedReason;
+            }
+            if (cities.has(savedCity)) {
+                citySelect.value = savedCity;
+            }
+
+            reasonSelect.removeEventListener('change', renderEvents);
+            citySelect.removeEventListener('change', renderEvents);
             reasonSelect.addEventListener('change', renderEvents);
             citySelect.addEventListener('change', renderEvents);
         }
@@ -106,13 +142,13 @@
             const cityFilter = document.getElementById('city-filter').value;
             const grid = document.getElementById('events-grid');
             
-            const filtered = allEvents.filter(item => {
+            const filtered = activeEvents.filter(item => {
                 const matchesReason = reasonFilter ? item.reason === reasonFilter : true;
                 const matchesCity = cityFilter ? item.city === cityFilter : true;
                 return matchesReason && matchesCity;
             });
 
-            document.getElementById('stats').textContent = `Showing ${filtered.length} of ${allEvents.length} events`;
+            document.getElementById('stats').textContent = `Showing ${filtered.length} of ${activeEvents.length} events`;
 
             if (filtered.length === 0) {
                 grid.innerHTML = `
@@ -131,22 +167,55 @@
                         <div>
                             <div class="flex justify-between items-start gap-2 mb-3">
                                 <span class="text-xs font-bold px-2 py-1 rounded-md border ${badgeColor}">
-                                    ${item.reason || 'Flagged'}
+                                    ${escapeHtml(item.reason || 'Flagged')}
                                 </span>
-                                <span class="text-xs text-slate-500 font-semibold">${item.scraped_at || 'Recently'}</span>
+                                <span class="text-xs text-slate-500 font-semibold">${escapeHtml(item.scraped_at || 'Recently')}</span>
                             </div>
-                            <h3 class="text-xl font-bold text-white mb-2 leading-tight">${item.name || 'Bingo Event'}</h3>
-                            <p class="text-slate-400 text-sm font-semibold mb-2">📍 ${item.venue || 'Unknown Venue'} (${item.city || 'N/A'}, ${item.state || 'N/A'})</p>
-                            <p class="text-slate-400 text-sm mb-4 line-clamp-3">${item.notes || 'No description available.'}</p>
+                            <h3 class="text-xl font-bold text-white mb-2 leading-tight">${escapeHtml(item.name || 'Bingo Event')}</h3>
+                            <p class="text-slate-400 text-sm font-semibold mb-2">📍 ${escapeHtml(item.venue || 'Unknown Venue')} (${escapeHtml(item.city || 'N/A')}, ${escapeHtml(item.state || 'N/A')})</p>
+                            <p class="text-slate-400 text-sm mb-4 line-clamp-3">${escapeHtml(item.notes || 'No description available.')}</p>
                         </div>
-                        <div class="border-t border-slate-700 pt-4 mt-auto">
-                            <a href="${item.website}" target="_blank" class="w-full inline-flex justify-center items-center px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl transition-colors text-sm">
+                        <div class="border-t border-slate-700 pt-4 mt-auto flex gap-3">
+                            <a href="${escapeHtml(item.website)}" target="_blank" class="flex-1 inline-flex justify-center items-center px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl transition-colors text-sm">
                                 View Event Page &rarr;
                             </a>
+                            <button onclick="hideEvent('${escapeHtml(item.name)}', '${escapeHtml(item.city)}')" class="px-4 py-2 bg-slate-700 hover:bg-red-950/80 hover:text-red-300 hover:border-red-900 border border-slate-600 text-slate-300 font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-1.5" title="Hide event and exclude from future scrapes">
+                                👁️‍🗨️ Hide
+                            </button>
                         </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        async function hideEvent(name, city) {
+            if (!confirm(`Are you sure you want to hide "${name}"? This will exclude it from future scraper runs.`)) {
+                return;
+            }
+            
+            const key = `hide_${name}_${city}`;
+            localStorage.setItem(key, 'true');
+            
+            activeEvents = activeEvents.filter(item => !(item.name === name && item.city === city));
+            
+            populateFilters();
+            renderEvents();
+            
+            try {
+                const response = await fetch('/api/hide-event', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, city })
+                });
+                
+                if (!response.ok) {
+                    console.warn('API returned error or is not running. Saved locally.');
+                }
+            } catch (err) {
+                console.warn('Failed to communicate with local write API. Saved locally.');
+            }
         }
 
         window.addEventListener('DOMContentLoaded', loadEvents);
