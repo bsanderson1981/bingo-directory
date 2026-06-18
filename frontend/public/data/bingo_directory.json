@@ -1,0 +1,22 @@
+[
+  {
+    "id": "bingo-ia-001",
+    "name": "Sunday Drag Queen Bingo",
+    "venue": "The Garden Nightclub",
+    "address": "112 SE 4th St",
+    "city": "Des Moines",
+    "state": "IA",
+    "zip": "50309",
+    "latitude": 41.5855734,
+    "longitude": -93.6141369,
+    "phone": "515-244-4400",
+    "website": "https://www.thegardendm.com",
+    "schedule": "Every Sunday at 6:00 PM",
+    "categories": [
+      "drag",
+      "lgbtq+"
+    ],
+    "notes": "Hosted by weekly rotating guest drag performers. Free admission, cards available for purchase. 21+ event.",
+    "verified_at": "2026-06-18"
+  }
+]

@@ -1,0 +1,123 @@
+[
+    {
+        "id": 1,
+        "name": "Pasadena Senior Center",
+        "address": "85 E Holly St",
+        "city": "Pasadena",
+        "state": "CA",
+        "zip": "91103",
+        "lat": 34.1477,
+        "lng": -118.1445,
+        "type": "Senior Center",
+        "phone": "(626) 795-4331",
+        "website": "https://www.pasadenaseniorcenter.org/"
+    },
+    {
+        "id": 2,
+        "name": "Downtown Anaheim Community Center",
+        "address": "250 E Center St",
+        "city": "Anaheim",
+        "state": "CA",
+        "zip": "92805",
+        "lat": 33.8366,
+        "lng": -117.9143,
+        "type": "Community Center",
+        "phone": "(714) 765-4500"
+    },
+    {
+        "id": 3,
+        "name": "Culver City Senior Center",
+        "address": "4095 Overland Ave",
+        "city": "Culver City",
+        "state": "CA",
+        "zip": "90232",
+        "lat": 34.0166,
+        "lng": -118.4005,
+        "type": "Senior Center",
+        "phone": "(310) 253-6700"
+    },
+    {
+        "id": 4,
+        "name": "Santa Monica Emeritus College",
+        "address": "1227 2nd St",
+        "city": "Santa Monica",
+        "state": "CA",
+        "zip": "90401",
+        "lat": 34.0195,
+        "lng": -118.4984,
+        "type": "Community/Education",
+        "phone": "(310) 434-4306"
+    },
+    {
+        "id": 5,
+        "name": "Joslyn Community Center",
+        "address": "1601 N Valley Dr",
+        "city": "Manhattan Beach",
+        "state": "CA",
+        "zip": "90266",
+        "lat": 33.8864,
+        "lng": -118.4116,
+        "type": "Community Center",
+        "phone": "(310) 802-5430"
+    },
+    {
+        "id": 6,
+        "name": "Burbank Joslyn Adult Center",
+        "address": "1301 W Olive Ave",
+        "city": "Burbank",
+        "state": "CA",
+        "zip": "91506",
+        "lat": 34.1751,
+        "lng": -118.3188,
+        "type": "Senior Center",
+        "phone": "(818) 238-5353"
+    },
+    {
+        "id": 7,
+        "name": "Long Beach Senior Center",
+        "address": "1150 E 4th St",
+        "city": "Long Beach",
+        "state": "CA",
+        "zip": "90802",
+        "lat": 33.7719,
+        "lng": -118.1793,
+        "type": "Senior Center",
+        "phone": "(562) 570-3500"
+    },
+    {
+        "id": 8,
+        "name": "Garden Grove H. Louis Lake Senior Center",
+        "address": "11300 Stanford Ave",
+        "city": "Garden Grove",
+        "state": "CA",
+        "zip": "92840",
+        "lat": 33.7770,
+        "lng": -117.9392,
+        "type": "Senior Center",
+        "phone": "(714) 741-5253"
+    },
+    {
+        "id": 9,
+        "name": "Peninsula Center Library (Community Room)",
+        "address": "701 Silver Spur Rd",
+        "city": "Rolling Hills Estates",
+        "state": "CA",
+        "zip": "90274",
+        "lat": 33.7749,
+        "lng": -118.3620,
+        "type": "Community Center",
+        "phone": "(310) 377-9584"
+    },
+    {
+        "id": 10,
+        "name": "Oceanside Senior Citizens Center",
+        "address": "455 Country Club Ln",
+        "city": "Oceanside",
+        "state": "CA",
+        "zip": "92054",
+        "lat": 33.2045,
+        "lng": -117.3698,
+        "type": "Senior Center",
+        "phone": "(760) 435-5250"
+    }
+]
