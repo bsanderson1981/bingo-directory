@@ -95,9 +95,91 @@ function saveBingoListing(listing) {
   }
 }
 
+// Scrape Gay Desert Guide specifically for Palm Springs bingo events
+async function scrapeGayDesertGuide() {
+  console.log('\n🌵 Scraping Gay Desert Guide (Palm Springs)...');
+  try {
+    const searchUrl = 'https://gaydesertguide.com/wp-json/wp/v2/search?search=bingo&subtype=ajde_events&per_page=20';
+    const response = await fetch(searchUrl, {
+      headers: {
+        'User-Agent': USER_AGENT
+      }
+    });
+
+    if (!response.ok) {
+      console.log(`❌ Failed to query WordPress search API: ${response.status}`);
+      return;
+    }
+
+    const foundEvents = await response.json();
+    console.log(`Found ${foundEvents.length} potential bingo events on Gay Desert Guide API.`);
+
+    for (const event of foundEvents) {
+      if (!event.url || !event.title) continue;
+      const titleText = event.title;
+      console.log(`Processing Gay Desert Guide event: "${titleText}"`);
+      await sleep(2000); // Friendly delay
+      
+      try {
+        const detailResponse = await fetch(event.url, { headers: { 'User-Agent': USER_AGENT } });
+        if (!detailResponse.ok) continue;
+        
+        const detailHtml = await detailResponse.text();
+        const $$ = cheerio.load(detailHtml);
+        
+        let venue = $$('.evo_locationName, .evo_card_location, .tribe-events-venue-details a').first().text().trim();
+        if (!venue) {
+          venue = $$('.eventon_list_event .location, .evo_event_location_title').first().text().trim();
+        }
+        if (!venue) {
+          venue = 'Palm Springs Venue';
+        }
+
+        let address = $$('.evo_event_location_address, .evo_card_location_address').first().text().trim() || '';
+        let schedule = $$('.evo_event_time, .evo_event_header_time').first().text().trim() || 'Check website';
+        let notes = $$('.eventon_desc_in, .evo_event_details').text().trim().substring(0, 300) + '...';
+        if (notes.length < 10) {
+          notes = 'Drag/LGBTQ+ friendly bingo event at ' + venue;
+        }
+
+        const categories = ['drag', 'lgbtq+'];
+        if (titleText.toLowerCase().includes('disco')) categories.push('disco');
+        if (titleText.toLowerCase().includes('tunes') || titleText.toLowerCase().includes('music')) categories.push('music');
+
+        const listing = {
+          name: titleText.split(' at ')[0].split(' | ')[0].split(' / ')[0].trim(),
+          venue: venue,
+          address: address,
+          city: 'Palm Springs',
+          state: 'CA',
+          zip: '92262',
+          latitude: null,
+          longitude: null,
+          phone: '',
+          website: event.url,
+          schedule: schedule,
+          categories: categories,
+          notes: notes
+        };
+        
+        saveBingoListing(listing);
+        
+      } catch (err) {
+        console.error(`Error parsing event details for ${event.url}:`, err.message);
+      }
+    }
+
+  } catch (error) {
+    console.error('Error scraping Gay Desert Guide:', error.message);
+  }
+}
+
 // Main logic
 async function runScraper() {
   console.log('🏁 Starting Drag & LGBTQ+ Bingo Scraper...');
+  
+  // Scrape Gay Desert Guide first
+  await scrapeGayDesertGuide();
   
   for (let i = 0; i < SEARCH_TARGETS.length; i++) {
     const target = SEARCH_TARGETS[i];
