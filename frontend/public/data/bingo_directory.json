@@ -18,5 +18,147 @@
     ],
     "notes": "Hosted by weekly rotating guest drag performers. Free admission, cards available for purchase. 21+ event.",
     "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-001",
+    "name": "Legendary Bingo",
+    "venue": "Hamburger Mary's",
+    "address": "8288 Santa Monica Blvd",
+    "city": "West Hollywood",
+    "state": "CA",
+    "zip": "90046",
+    "latitude": 34.090680,
+    "longitude": -118.370216,
+    "phone": "323-654-3800",
+    "website": "https://www.hamburgermarys.com/weho/",
+    "schedule": "Tuesdays & Wednesdays at 7:00 PM",
+    "categories": [
+      "drag",
+      "lgbtq+",
+      "charity"
+    ],
+    "notes": "LA's longest-running and most iconic drag queen bingo night. Often features celebrity guests and benefits local charities. Reservations highly recommended.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-002",
+    "name": "Drag Queen Bingo with Misty Violet",
+    "venue": "Shoo Shoo Baby",
+    "address": "121 E 6th St",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zip": "90014",
+    "latitude": 34.045437,
+    "longitude": -118.251410,
+    "phone": "213-988-1212",
+    "website": "https://www.shooshoobabyla.com",
+    "schedule": "2nd & 4th Thursdays at 7:00 PM",
+    "categories": [
+      "drag",
+      "lgbtq+ friendly"
+    ],
+    "notes": "Hosted by the fabulous Misty Violet. Free to play, specialty cocktails available, and a lively atmosphere in Downtown LA.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-003",
+    "name": "Wednesday Drag Bingo",
+    "venue": "The Detour",
+    "address": "2200 Market St",
+    "city": "San Francisco",
+    "state": "CA",
+    "zip": "94114",
+    "latitude": 37.764069,
+    "longitude": -122.433044,
+    "phone": "415-872-5310",
+    "website": "https://www.detoursf.com",
+    "schedule": "Every Wednesday at 7:30 PM",
+    "categories": [
+      "drag",
+      "lgbtq+"
+    ],
+    "notes": "Weekly drag bingo with rotating hosts, awesome prizes, and lip-sync showdowns at the end of the night. Arrive early for seating.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-004",
+    "name": "Thursday Drag Bingo with Apple Adams",
+    "venue": "Tipsy Putt",
+    "address": "630 K St",
+    "city": "Sacramento",
+    "state": "CA",
+    "zip": "95814",
+    "latitude": 38.580211,
+    "longitude": -121.493921,
+    "phone": "916-248-8422",
+    "website": "https://www.tipsyputt.com",
+    "schedule": "Every Thursday at 7:00 PM",
+    "categories": [
+      "drag",
+      "lgbtq+ friendly"
+    ],
+    "notes": "Hosted by Sacramento queen Apple Adams. $5 buy-in covers all rounds, walk-ins welcome.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-005",
+    "name": "Rainbow Chamber Drag Queen Bingo",
+    "venue": "Mango's",
+    "address": "1930 K St",
+    "city": "Sacramento",
+    "state": "CA",
+    "zip": "95811",
+    "latitude": 38.574676,
+    "longitude": -121.479155,
+    "phone": "916-325-8600",
+    "website": "https://www.rainbowchamber.com",
+    "schedule": "1st Thursday of the month",
+    "categories": [
+      "drag",
+      "lgbtq+",
+      "charity"
+    ],
+    "notes": "Sacramento Rainbow Chamber's monthly charity fundraising show. Highly popular and frequently sells out, check site for ticket info.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-006",
+    "name": "Bingo Gone Bonkers!",
+    "venue": "Gossip Grill",
+    "address": "1220 University Ave",
+    "city": "San Diego",
+    "state": "CA",
+    "zip": "92103",
+    "latitude": 32.748386,
+    "longitude": -117.151745,
+    "phone": "619-260-8020",
+    "website": "https://www.gossipgrill.com",
+    "schedule": "Every Wednesday night",
+    "categories": [
+      "drag",
+      "lgbtq+"
+    ],
+    "notes": "Hosted by Mariam T at Gossip Grill. High energy event with great drink specials in the heart of Hillcrest.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-007",
+    "name": "Babette's Bingo",
+    "venue": "Urban MO's Bar & Grill",
+    "address": "308 University Ave",
+    "city": "San Diego",
+    "state": "CA",
+    "zip": "92103",
+    "latitude": 32.748641,
+    "longitude": -117.163351,
+    "phone": "619-491-0400",
+    "website": "https://www.urbanmos.com",
+    "schedule": "Check website for calendar dates",
+    "categories": [
+      "drag",
+      "lgbtq+"
+    ],
+    "notes": "Hosted by the legendary Babette Schwartz at Hillcrest's famous Urban MO's. Extremely fun, classic San Diego drag staple.",
+    "verified_at": "2026-06-18"
   }
 ]

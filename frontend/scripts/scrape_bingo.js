@@ -10,12 +10,10 @@ const BINGO_DATA_FILE = path.join(__dirname, '../public/data/bingo_directory.jso
 
 // List of cities and states to scrape for drag/LGBTQ+ friendly bingo
 const SEARCH_TARGETS = [
-  { city: 'Des Moines', state: 'IA' },
-  { city: 'Iowa City', state: 'IA' },
-  { city: 'Chicago', state: 'IL' },
-  { city: 'Kansas City', state: 'MO' },
-  { city: 'Minneapolis', state: 'MN' },
-  { city: 'Omaha', state: 'NE' }
+  { city: 'Los Angeles', state: 'CA' },
+  { city: 'San Francisco', state: 'CA' },
+  { city: 'Sacramento', state: 'CA' },
+  { city: 'San Diego', state: 'CA' }
 ];
 
 const DELAY_MS = 4000; // Delay to prevent rate limiting
@@ -104,9 +102,9 @@ async function runScraper() {
   for (let i = 0; i < SEARCH_TARGETS.length; i++) {
     const target = SEARCH_TARGETS[i];
     const queries = [
-      `"drag queen bingo" "${target.city}" ${target.state}`,
-      `"drag bingo" "${target.city}" ${target.state}`,
-      `"lgbtq bingo" "${target.city}" ${target.state}`
+      `drag queen bingo ${target.city} ${target.state}`,
+      `drag bingo ${target.city} ${target.state}`,
+      `lgbtq bingo ${target.city} ${target.state}`
     ];
 
     console.log(`\n========================================`);
