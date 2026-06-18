@@ -200,5 +200,165 @@
     ],
     "notes": "Regularly hosted drag bingo event at The Joint by PRC in Cathedral City. Great prizes and drink specials.",
     "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-010",
+    "name": "Tunes Bingo",
+    "venue": "Tool Shed",
+    "address": "600 E Sunny Dunes Rd",
+    "city": "Palm Springs",
+    "state": "CA",
+    "zip": "92264",
+    "latitude": 33.814343,
+    "longitude": -116.539828,
+    "phone": "760-322-4500",
+    "website": "https://www.toolshedps.com",
+    "schedule": "Tuesdays 6:00 PM–8:00 PM",
+    "categories": [
+      "lgbtq+",
+      "music"
+    ],
+    "notes": "A unique musical bingo event. Test your song recognition skills and win prizes in a welcoming local neighborhood leather bar.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-011",
+    "name": "Drag Bingo with Vanity Hal",
+    "venue": "Ace Hotel & Swim Club",
+    "address": "701 E Palm Canyon Dr",
+    "city": "Palm Springs",
+    "state": "CA",
+    "zip": "92264",
+    "latitude": 33.804868,
+    "longitude": -116.538561,
+    "phone": "760-325-9900",
+    "website": "https://acehotel.com/palm-springs/",
+    "schedule": "Tuesdays 6:00 PM–9:00 PM",
+    "categories": [
+      "drag",
+      "lgbtq+ friendly"
+    ],
+    "notes": "Enjoy poolside or lounge drag bingo hosted by Vanity Hal at the stylish Ace Hotel. Free to play, great drinks and vibes.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-012",
+    "name": "Bow Wow Bingo",
+    "venue": "Boozehounds",
+    "address": "2080 N Palm Canyon Dr",
+    "city": "Palm Springs",
+    "state": "CA",
+    "zip": "92262",
+    "latitude": 33.850974,
+    "longitude": -116.546377,
+    "phone": "760-656-0067",
+    "website": "https://boozehoundsps.com",
+    "schedule": "3rd Wednesday of the month at 6:00 PM",
+    "categories": [
+      "drag",
+      "lgbtq+ friendly",
+      "charity"
+    ],
+    "notes": "A dog-friendly drag queen bingo evening benefiting local animal shelters. Hosted at Boozehounds' trendy indoor/outdoor atrium.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-013",
+    "name": "Rainbow Night Bingo",
+    "venue": "Playoffs Sports Lounge",
+    "address": "12105 Palm Dr",
+    "city": "Desert Hot Springs",
+    "state": "CA",
+    "zip": "92240",
+    "latitude": 33.939226,
+    "longitude": -116.502905,
+    "phone": "760-251-2644",
+    "website": "http://playoffssportslounge.com/",
+    "schedule": "4th Wednesday of the month at 7:00 PM",
+    "categories": [
+      "lgbtq+"
+    ],
+    "notes": "A monthly celebration and bingo night for the local LGBTQ+ community. High energy sports bar environment.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-014",
+    "name": "Drag Bingo at ARRIVE",
+    "venue": "ARRIVE Palm Springs",
+    "address": "1551 N Palm Canyon Dr",
+    "city": "Palm Springs",
+    "state": "CA",
+    "zip": "92262",
+    "latitude": 33.843389,
+    "longitude": -116.547141,
+    "phone": "760-507-1650",
+    "website": "https://www.arrivehotels.com/palm-springs/",
+    "schedule": "Fridays 4:30 PM–7:00 PM",
+    "categories": [
+      "drag",
+      "lgbtq+ friendly"
+    ],
+    "notes": "Start your weekend early with Friday afternoon drag bingo by the pool at ARRIVE. Open to the public, great vibes.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-015",
+    "name": "Disco Drag Bingo",
+    "venue": "V Wine Lounge & Martini Bar",
+    "address": "600 E Tahquitz Canyon Way",
+    "city": "Palm Springs",
+    "state": "CA",
+    "zip": "92262",
+    "latitude": 33.823611,
+    "longitude": -116.539722,
+    "phone": "760-668-9665",
+    "website": "https://www.vwilounge.com",
+    "schedule": "Fridays 6:00 PM–8:00 PM",
+    "categories": [
+      "drag",
+      "lgbtq+",
+      "disco"
+    ],
+    "notes": "A fun and interactive disco-themed drag bingo evening featuring sing-alongs, classic hits, and retro cocktails at the V Wine Lounge.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-016",
+    "name": "Drag Bingo with Angelique Va Gorgeous",
+    "venue": "The Lounge at ZOSO",
+    "address": "150 S Indian Canyon Dr",
+    "city": "Palm Springs",
+    "state": "CA",
+    "zip": "92262",
+    "latitude": 33.823297,
+    "longitude": -116.546366,
+    "phone": "760-325-9676",
+    "website": "https://www.hotelzosops.com",
+    "schedule": "Fridays at 8:00 PM",
+    "categories": [
+      "drag",
+      "lgbtq+"
+    ],
+    "notes": "Hosted by Angelique Va Gorgeous and Dolly Parden'Me. High energy nightlife event inside Hotel ZOSO's chic lounge.",
+    "verified_at": "2026-06-18"
+  },
+  {
+    "id": "bingo-ca-017",
+    "name": "Traditional / 0-69 Bingo",
+    "venue": "Tool Shed",
+    "address": "600 E Sunny Dunes Rd",
+    "city": "Palm Springs",
+    "state": "CA",
+    "zip": "92264",
+    "latitude": 33.814343,
+    "longitude": -116.539828,
+    "phone": "760-322-4500",
+    "website": "https://www.toolshedps.com",
+    "schedule": "Saturdays 12:00 PM–3:00 PM",
+    "categories": [
+      "lgbtq+"
+    ],
+    "notes": "Traditional Saturday afternoon bingo game at the Tool Shed. Laid back atmosphere, friendly local crowd.",
+    "verified_at": "2026-06-18"
   }
 ]
