@@ -95,6 +95,16 @@ function checkEventRelevance(name, description, schedule, venue) {
   const scheduleText = (schedule || '').toLowerCase();
   const venueText = (venue || '').toLowerCase();
 
+  // Explicitly allow "drag queen bingo" or "drag bingo" search term matches to bypass checks and add to directory
+  const hasExplicitDragBingo = nameText.includes('drag queen bingo') || 
+                               descText.includes('drag queen bingo') ||
+                               nameText.includes('drag bingo') ||
+                               descText.includes('drag bingo');
+
+  if (hasExplicitDragBingo) {
+    return { relevant: true };
+  }
+
   const hasBingoInName = nameText.includes('bingo');
 
   // Check if the venue is a known LGBTQ+ bar/business
