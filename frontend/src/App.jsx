@@ -28,6 +28,7 @@ function App() {
           >
             Find Bingo
           </NavLink>
+          {/* 
           <NavLink
             to="/communityblog"
             className={({ isActive }) =>
@@ -39,25 +40,14 @@ function App() {
           >
             Community Blog
           </NavLink>
-          <NavLink
-            to="/ftcblog"
-            className={({ isActive }) =>
-              `px-6 py-2 rounded-lg text-lg font-bold transition-all ${isActive
-                ? 'bg-teal-600 text-white shadow-md'
-                : 'text-slate-500 hover:bg-slate-50'
-              }`
-            }
-          >
-            FTC Consumer Blog
-          </NavLink>
+          */}
         </div>
 
         {/* Routes */}
         <div className="w-full">
           <Routes>
             <Route path="/" element={<SearchPage />} />
-            <Route path="/communityblog" element={<SubstackBlog />} />
-            <Route path="/ftcblog" element={<ConsumerBlog />} />
+            {/* <Route path="/communityblog" element={<SubstackBlog />} /> */}
             <Route path="/contact" element={<FeedbackForm />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
