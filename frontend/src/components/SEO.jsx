@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 export function SEO({ title, description, image, url, events }) {
     const siteTitle = "LGBTQ+ & Drag Queen Bingo Directory | OlderFriends.org";
     const defaultDescription = "Find weekly drag queen bingo, LGBTQ+ friendly bingo nights, pride events, and community activities in your state. Connect, support local venues, and have fun!";
-    const defaultImage = "https://olderfriends.org/hero.jpg";
+    const defaultImage = "https://olderfriends.org/hero.png";
     const siteUrl = "https://olderfriends.org";
 
     const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
