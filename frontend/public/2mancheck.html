@@ -99,8 +99,8 @@
                 if (!response.ok) throw new Error('Failed to load manual review data');
                 allEvents = await response.json();
                 
-                // Filter out hidden items
-                activeEvents = allEvents.filter(item => !isHidden(item));
+                // Load all items (including hidden ones)
+                activeEvents = allEvents;
                 
                 populateFilters();
                 renderEvents();
@@ -190,7 +190,21 @@
                 return matchesReason && matchesCity;
             });
 
-            document.getElementById('stats').textContent = `Showing ${filtered.length} of ${activeEvents.length} events`;
+            // Sort: Unhidden items first, Hidden items second (sorted A-Z)
+            filtered.sort((a, b) => {
+                const aHidden = isHidden(a);
+                const bHidden = isHidden(b);
+                
+                if (aHidden && !bHidden) return 1;
+                if (!aHidden && bHidden) return -1;
+                if (aHidden && bHidden) {
+                    return (a.name || '').localeCompare(b.name || '');
+                }
+                return 0;
+            });
+
+            const totalUnhiddenCount = activeEvents.filter(item => !isHidden(item)).length;
+            document.getElementById('stats').textContent = `Showing ${filtered.length} of ${activeEvents.length} events (${totalUnhiddenCount} unreviewed)`;
 
             if (filtered.length === 0) {
                 grid.innerHTML = `
@@ -206,12 +220,29 @@
 
             grid.innerHTML = filtered.map(item => {
                 const badgeColor = item.reason && item.reason.includes('Annual') ? 'bg-amber-900/60 text-amber-300 border-amber-800' : 'bg-red-900/60 text-red-300 border-red-800';
+                const itemHidden = isHidden(item);
                 
+                const cardClasses = itemHidden 
+                    ? "bg-slate-900/60 border-slate-800 rounded-2xl p-6 shadow-md transition-all flex flex-col justify-between relative opacity-40 grayscale-[30%]" 
+                    : "bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-md hover:shadow-xl hover:border-slate-600 transition-all flex flex-col justify-between relative";
+                
+                const checkboxHtml = itemHidden
+                    ? `<input type="checkbox" checked disabled class="w-5 h-5 rounded border-slate-805 text-slate-600 bg-slate-950 cursor-not-allowed">`
+                    : `<input type="checkbox" class="event-checkbox w-5 h-5 rounded border-slate-700 text-teal-600 focus:ring-teal-500 bg-slate-900 cursor-pointer" data-name="${escapeHtml(item.name)}" data-city="${escapeHtml(item.city)}">`;
+
+                const actionButtonHtml = itemHidden
+                    ? `<button disabled class="px-4 py-2 bg-slate-800 border border-slate-700 text-slate-500 font-bold rounded-xl text-sm flex items-center justify-center gap-1.5 cursor-not-allowed">
+                          👁️‍🗨️ Hidden
+                       </button>`
+                    : `<button onclick="hideEvent('${escapeHtml(item.name)}', '${escapeHtml(item.city)}')" class="px-4 py-2 bg-slate-700 hover:bg-red-950/80 hover:text-red-300 hover:border-red-900 border border-slate-600 text-slate-300 font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-1.5" title="Hide event and exclude from future scrapes">
+                          👁️‍🗨️ Hide
+                       </button>`;
+
                 return `
-                    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-md hover:shadow-xl hover:border-slate-600 transition-all flex flex-col justify-between relative">
+                    <div class="${cardClasses}">
                         <div>
                             <div class="flex items-center gap-3 mb-4">
-                                <input type="checkbox" class="event-checkbox w-5 h-5 rounded border-slate-700 text-teal-600 focus:ring-teal-500 bg-slate-900 cursor-pointer" data-name="${escapeHtml(item.name)}" data-city="${escapeHtml(item.city)}">
+                                ${checkboxHtml}
                                 <span class="text-xs font-bold px-2 py-1 rounded-md border ${badgeColor}">
                                     ${escapeHtml(item.reason || 'Flagged')}
                                 </span>
@@ -225,9 +256,7 @@
                             <a href="${escapeHtml(item.website)}" target="_blank" class="flex-1 inline-flex justify-center items-center px-4 py-2 bg-teal-600 hover:bg-teal-500 text-white font-bold rounded-xl transition-colors text-sm">
                                 View Event Page &rarr;
                             </a>
-                            <button onclick="hideEvent('${escapeHtml(item.name)}', '${escapeHtml(item.city)}')" class="px-4 py-2 bg-slate-700 hover:bg-red-950/80 hover:text-red-300 hover:border-red-900 border border-slate-600 text-slate-300 font-bold rounded-xl transition-all text-sm flex items-center justify-center gap-1.5" title="Hide event and exclude from future scrapes">
-                                👁️‍🗨️ Hide
-                            </button>
+                            ${actionButtonHtml}
                         </div>
                     </div>
                 `;
@@ -253,7 +282,11 @@
             const key = `hide_${name}_${city}`;
             localStorage.setItem(key, 'true');
             
-            activeEvents = activeEvents.filter(item => !(item.name === name && item.city === city));
+            // Mark as hidden in memory
+            const matchedItem = activeEvents.find(item => item.name === name && item.city === city);
+            if (matchedItem) {
+                matchedItem.hidden = true;
+            }
             
             populateFilters();
             renderEvents();
@@ -304,6 +337,11 @@
                     if (action === 'hide') {
                         const key = `hide_${e.name}_${e.city}`;
                         localStorage.setItem(key, 'true');
+                        
+                        const matchedItem = activeEvents.find(item => item.name === e.name && item.city === e.city);
+                        if (matchedItem) {
+                            matchedItem.hidden = true;
+                        }
                     }
                 });
 
@@ -320,11 +358,13 @@
                     console.warn('Vite local API returned error or is not running.');
                 }
                 
-                // Update activeEvents in client
-                activeEvents = activeEvents.filter(item => {
-                    const matched = events.some(e => e.name === item.name && e.city === item.city);
-                    return !matched;
-                });
+                if (action === 'add') {
+                    // Update activeEvents in client by removing approved events
+                    activeEvents = activeEvents.filter(item => {
+                        const matched = events.some(e => e.name === item.name && e.city === item.city);
+                        return !matched;
+                    });
+                }
 
                 populateFilters();
                 renderEvents();
