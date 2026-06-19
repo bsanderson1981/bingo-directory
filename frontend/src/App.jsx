@@ -26,7 +26,7 @@ function App() {
               }`
             }
           >
-            Find Bingo
+            Find Events
           </NavLink>
           {/* 
           <NavLink
@@ -58,7 +58,7 @@ function App() {
         </div>
 
         <footer className="mt-auto py-8 text-slate-700 text-sm flex flex-col items-center gap-2">
-          <p>&copy; {new Date().getFullYear()} LGBTQ+ & Drag Bingo Directory</p>
+          <p>&copy; {new Date().getFullYear()} LGBTQ+ Drag Directory (Shows, Brunches & Bingo)</p>
           <div className="flex gap-4">
             <Link
               to="/privacy"

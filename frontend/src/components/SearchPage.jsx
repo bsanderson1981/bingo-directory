@@ -93,13 +93,13 @@ export function SearchPage() {
                     />
                 </div>
                 <h1 className="text-4xl md:text-6xl font-extrabold text-black mb-2 tracking-tight drop-shadow-sm">
-                    Find LGBTQ+ & Drag Queen Bingo Near You
+                    Find Drag Shows, Drag Brunches & Drag Bingo Near You
                 </h1>
                 <h2 className="text-2xl md:text-4xl font-bold text-slate-800 mb-6 tracking-wide">
-                    Connect with your community, find weekly drag events, and support local venues.
+                    Search for drag shows, drag brunches, and drag bingo events in every state and major cities.
                 </h2>
                 <p className="text-slate-600 text-xl md:text-2xl font-normal tracking-wide max-w-2xl mx-auto">
-                    Search by Zip Code or City to find weekly shows, pride events, and friendly neighborhood bingo night listings.
+                    We catalog events in every state and the top 5 major cities in each state, plus drag hotspots like Provincetown, MA, Key West, FL, and Fire Island, NY.
                     <span className="text-slate-600 text-base mt-2 block">Powered by Geospatial Search</span>
                 </p>
             </div>

@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 
 export function SEO({ title, description, image, url, events }) {
-    const siteTitle = "LGBTQ+ & Drag Queen Bingo Directory | OlderFriends.org";
-    const defaultDescription = "Find weekly drag queen bingo, LGBTQ+ friendly bingo nights, pride events, and community activities in your state. Connect, support local venues, and have fun!";
+    const siteTitle = "LGBTQ+ Drag Directory: Shows, Brunches & Bingo | OlderFriends.org";
+    const defaultDescription = "Find weekly drag shows, drag brunches, drag queen bingo, LGBTQ+ friendly events, and community activities in your state. Connect, support local venues, and have fun!";
     const defaultImage = "https://olderfriends.org/hero.png";
     const siteUrl = "https://olderfriends.org";
 
@@ -15,7 +15,7 @@ export function SEO({ title, description, image, url, events }) {
     const websiteSchema = {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "LGBTQ+ & Drag Queen Bingo Directory",
+        "name": "LGBTQ+ Drag Directory (Shows, Brunches & Bingo)",
         "url": finalUrl,
         "description": finalDescription,
         "image": finalImage,
@@ -83,13 +83,13 @@ export function SEO({ title, description, image, url, events }) {
             <title>{fullTitle}</title>
             <meta name="description" content={finalDescription} />
             <link rel="canonical" href={finalUrl} />
-            <meta name="keywords" content="drag queen bingo, lgbtq bingo, drag bingo palm springs, weekly drag bingo, gay owned bars, lgbtq friendly events, local gay directory" />
+            <meta name="keywords" content="drag shows, drag brunches, drag queen bingo, lgbtq events, gay bars directory, drag performance local, pride events near me" />
             
             {/* Full indexing permission for search engines & AI agent scrapers */}
             <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 
             {/* Open Graph / Facebook */}
-            <meta property="og:site_name" content="LGBTQ+ & Drag Queen Bingo Directory" />
+            <meta property="og:site_name" content="LGBTQ+ Drag Directory (Shows, Brunches & Bingo)" />
             <meta property="og:type" content="website" />
             <meta property="og:url" content={finalUrl} />
             <meta property="og:title" content={fullTitle} />

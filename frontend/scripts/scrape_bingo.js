@@ -77,7 +77,10 @@ const SEARCH_TARGETS = [
   { city: 'Seattle', state: 'WA' },
   { city: 'Charleston', state: 'WV' },
   { city: 'Milwaukee', state: 'WI' },
-  { city: 'Cheyenne', state: 'WY' }
+  { city: 'Cheyenne', state: 'WY' },
+  { city: 'Provincetown', state: 'MA' },
+  { city: 'Key West', state: 'FL' },
+  { city: 'Fire Island', state: 'NY' }
 ];
 
 const DELAY_MS = 4000; // Delay to prevent rate limiting
