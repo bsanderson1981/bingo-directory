@@ -469,5 +469,68 @@
     ],
     "notes": "Famous for the legendary 'Low Tea' afternoon dance parties, drag brunches, and weekly themed cabaret performances in Fire Island Pines.",
     "verified_at": "2026-06-19"
+  },
+  {
+    "id": "bingo-fl-001",
+    "name": "801 Cabaret Drag Show & Bingo",
+    "venue": "801 Bourbon Bar",
+    "address": "801 Duval St",
+    "city": "Key West",
+    "state": "FL",
+    "zip": "33040",
+    "latitude": 24.5518,
+    "longitude": -81.7994,
+    "phone": "305-294-4737",
+    "website": "https://801bourbon.com",
+    "schedule": "Nightly drag shows at 9:00 PM and 11:00 PM; Sunday drag bingo at 5:00 PM",
+    "categories": [
+      "drag",
+      "lgbtq+",
+      "show"
+    ],
+    "notes": "The historic home of Key West's legendary drag scene, hosting nightly upstairs cabaret shows with the '801 Girls' and weekly Sunday drag queen bingo.",
+    "verified_at": "2026-06-19"
+  },
+  {
+    "id": "bingo-fl-002",
+    "name": "Aquanet Drag Show & Cabaret",
+    "venue": "Aqua Key West",
+    "address": "711 Duval St",
+    "city": "Key West",
+    "state": "FL",
+    "zip": "33040",
+    "latitude": 24.5529,
+    "longitude": -81.7997,
+    "phone": "305-294-0555",
+    "website": "https://aquakeywest.com",
+    "schedule": "Nightly drag shows and weekly cabaret events",
+    "categories": [
+      "drag",
+      "lgbtq+",
+      "show"
+    ],
+    "notes": "Key West's premier dance club and cabaret featuring nightly drag shows by the 'Aquanets', drag brunches, and lively community events.",
+    "verified_at": "2026-06-19"
+  },
+  {
+    "id": "bingo-fl-003",
+    "name": "Mangoes Sunday Drag Brunch",
+    "venue": "Mangoes",
+    "address": "700 Duval St",
+    "city": "Key West",
+    "state": "FL",
+    "zip": "33040",
+    "latitude": 24.5531,
+    "longitude": -81.8002,
+    "phone": "305-294-8002",
+    "website": "https://mangoeskeywest.com",
+    "schedule": "Sundays 12:00 PM–3:00 PM",
+    "categories": [
+      "drag",
+      "lgbtq+",
+      "brunch"
+    ],
+    "notes": "A Key West favorite hosting the famous weekly 'Mangoes Drag Brunch' on their outdoor tropical patio, featuring top local drag queens and bottomless mimosas.",
+    "verified_at": "2026-06-19"
   }
 ]
