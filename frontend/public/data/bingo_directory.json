@@ -360,5 +360,45 @@
     "notes": "BINGO NIGHTS!\n\n\n\nBring your friends and join us 4:30-7pm Fridays for some rounds of bingo!\n\n\n\nNo RSVP necessary. Free to play plus enjoy happy hour deals!...",
     "id": "bingo-ca-024",
     "verified_at": "2026-06-18"
+  },
+  {
+    "name": "Drag queen",
+    "venue": "Wikipedia",
+    "address": "",
+    "city": "Unknown",
+    "state": "NY",
+    "zip": "",
+    "latitude": null,
+    "longitude": null,
+    "phone": "",
+    "website": "https://www.bing.com/ck/a?!&&p=01c49bf120fd84f50f4ad9089ddf4c632dd3eed200737229f7310a1802997d13JmltdHM9MTc4MTgyNzIwMA&ptn=3&ver=2&hsh=4&fclid=05eda784-b364-6335-2442-b0f9b2f362fc&u=a1aHR0cHM6Ly9lbi5tLndpa2lwZWRpYS5vcmcvd2lraS9EcmFnX3F1ZWVu&ntb=1",
+    "schedule": "Check website for schedule",
+    "categories": [
+      "drag",
+      "lgbtq+"
+    ],
+    "notes": "People do drag for reasons ranging from self-expression to mainstream performance. Drag shows frequently include lip-syncing, live singing, and dancing. They typically occur at LGBTQ pride …",
+    "id": "bingo-ny-019",
+    "verified_at": "2026-06-19"
+  },
+  {
+    "name": "Discover Drag Events & Activities in Vancouver, WA",
+    "venue": "Local Venue",
+    "address": "",
+    "city": "Unknown",
+    "state": "NY",
+    "zip": "",
+    "latitude": null,
+    "longitude": null,
+    "phone": "",
+    "website": "https://www.bing.com/ck/a?!&&p=630763c4348bb7af12a26223039db640b31eb72afef7e02a357251f1412e9c43JmltdHM9MTc4MTgyNzIwMA&ptn=3&ver=2&hsh=4&fclid=05eda784-b364-6335-2442-b0f9b2f362fc&u=a1aHR0cHM6Ly93d3cuZXZlbnRicml0ZS5jb20vZC93YS0tdmFuY291dmVyL2RyYWcvP21zb2NraWQ9MDVlZGE3ODRiMzY0NjMzNTI0NDJiMGY5YjJmMzYyZmM&ntb=1",
+    "schedule": "Check website for schedule",
+    "categories": [
+      "drag",
+      "lgbtq+"
+    ],
+    "notes": "Drag Brunch PDX - Hosted by Nicoleonoscopi! Illusions The Drag Queen Show. Brunch & Dinner Shows. 1. Memorial day weekend. 2. Mothers day. 3. Cinco de mayo party. 4. Kids events. 5. …",
+    "id": "bingo-ny-020",
+    "verified_at": "2026-06-19"
   }
 ]

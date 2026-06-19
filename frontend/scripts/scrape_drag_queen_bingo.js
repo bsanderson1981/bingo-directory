@@ -111,13 +111,17 @@ function checkEventRelevance(name, description, schedule, venue) {
   const scheduleText = (schedule || '').toLowerCase();
   const venueText = (venue || '').toLowerCase();
 
-  // Explicitly allow "drag queen bingo" or "drag bingo" search term matches to bypass checks and add to directory
-  const hasExplicitDragBingo = nameText.includes('drag queen bingo') || 
+  // Explicitly allow "drag queen bingo", "drag bingo", "drag show", or "drag brunch" search term matches to bypass checks and add to directory
+  const hasExplicitDragEvent = nameText.includes('drag queen bingo') || 
                                descText.includes('drag queen bingo') ||
                                nameText.includes('drag bingo') ||
-                               descText.includes('drag bingo');
+                               descText.includes('drag bingo') ||
+                               nameText.includes('drag show') ||
+                               descText.includes('drag show') ||
+                               nameText.includes('drag brunch') ||
+                               descText.includes('drag brunch');
 
-  if (hasExplicitDragBingo) {
+  if (hasExplicitDragEvent) {
     return { relevant: true };
   }
 
@@ -250,15 +254,22 @@ function saveManualReviewListing(listing, reason) {
 async function runSecondaryScraper() {
   console.log('🏁 Starting 50-State Secondary Scraper for "drag Queen Bingo"...');
   
-  for (let i = 0; i < STATES.length; i++) {
-    const state = STATES[i];
+  const targetStates = process.argv.slice(2).map(s => s.toUpperCase());
+  const activeStates = targetStates.length > 0 
+    ? STATES.filter(s => targetStates.includes(s.code))
+    : STATES;
+
+  for (let i = 0; i < activeStates.length; i++) {
+    const state = activeStates[i];
     console.log(`\n========================================`);
-    console.log(`State: ${state.name} (${state.code}) (${i + 1}/${STATES.length})`);
+    console.log(`State: ${state.name} (${state.code}) (${i + 1}/${activeStates.length})`);
     console.log(`========================================`);
 
     const queries = [
       `"drag queen bingo" ${state.name}`,
-      `"drag bingo" ${state.name}`
+      `"drag bingo" ${state.name}`,
+      `"drag show" ${state.name}`,
+      `"drag brunch" ${state.name}`
     ];
 
     for (const query of queries) {

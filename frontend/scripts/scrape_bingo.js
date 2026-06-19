@@ -95,13 +95,17 @@ function checkEventRelevance(name, description, schedule, venue) {
   const scheduleText = (schedule || '').toLowerCase();
   const venueText = (venue || '').toLowerCase();
 
-  // Explicitly allow "drag queen bingo" or "drag bingo" search term matches to bypass checks and add to directory
-  const hasExplicitDragBingo = nameText.includes('drag queen bingo') || 
+  // Explicitly allow "drag queen bingo", "drag bingo", "drag show", or "drag brunch" search term matches to bypass checks and add to directory
+  const hasExplicitDragEvent = nameText.includes('drag queen bingo') || 
                                descText.includes('drag queen bingo') ||
                                nameText.includes('drag bingo') ||
-                               descText.includes('drag bingo');
+                               descText.includes('drag bingo') ||
+                               nameText.includes('drag show') ||
+                               descText.includes('drag show') ||
+                               nameText.includes('drag brunch') ||
+                               descText.includes('drag brunch');
 
-  if (hasExplicitDragBingo) {
+  if (hasExplicitDragEvent) {
     return { relevant: true };
   }
 
@@ -353,7 +357,9 @@ async function runScraper() {
     const queries = [
       `drag queen bingo ${target.city} ${target.state}`,
       `drag bingo ${target.city} ${target.state}`,
-      `lgbtq bingo ${target.city} ${target.state}`
+      `lgbtq bingo ${target.city} ${target.state}`,
+      `drag show ${target.city} ${target.state}`,
+      `drag brunch ${target.city} ${target.state}`
     ];
 
     console.log(`\n========================================`);
