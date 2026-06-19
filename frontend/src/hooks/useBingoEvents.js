@@ -31,7 +31,7 @@ export function useBingoEvents({ zip, state }) {
 
                 // 2. Fetch Bingo Directory Data if not cached
                 if (!bingoDataCache) {
-                    const res = await fetch('/data/bingo_directory.json');
+                    const res = await fetch(`/data/bingo_directory.json?t=${Date.now()}`);
                     if (!res.ok) throw new Error('Failed to load bingo directory data');
                     bingoDataCache = await res.json();
                 }
