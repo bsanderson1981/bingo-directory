@@ -11,6 +11,21 @@
             color: #f8fafc;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
+        /* Custom scrollbar for state list */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #0d9488;
+        }
     </style>
 </head>
 <body class="p-8 max-w-7xl mx-auto">
@@ -22,60 +37,90 @@
         </div>
     </header>
 
-    <main>
-        <!-- Controls -->
-        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg mb-4 flex flex-wrap gap-4 items-center justify-between">
-            <div class="flex gap-4 items-center">
-                <div>
-                    <label class="block text-sm font-semibold text-slate-300 mb-1">Filter by Reason</label>
-                    <select id="reason-filter" class="bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-2 focus:ring-2 focus:ring-teal-500">
-                        <option value="">All Reasons</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-slate-300 mb-1">Filter by City</label>
-                    <select id="city-filter" class="bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-2 focus:ring-2 focus:ring-teal-500">
-                        <option value="">All Cities</option>
-                    </select>
+    <main class="flex flex-col lg:flex-row gap-8">
+        <!-- Sidebar: States Queue -->
+        <aside class="w-full lg:w-72 flex-shrink-0">
+            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg lg:sticky lg:top-6">
+                <h2 class="text-xl font-bold text-teal-400 mb-4 flex items-center justify-between border-b border-slate-700 pb-3">
+                    <span>States Queue</span>
+                    <span id="state-queue-total" class="text-xs bg-slate-900 text-teal-300 px-2.5 py-1 rounded-full font-bold">0</span>
+                </h2>
+                <div id="state-list" class="space-y-2 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
+                    <!-- Dynamic state buttons -->
                 </div>
             </div>
-            <div class="text-slate-400 font-semibold" id="stats">
-                Showing 0 of 0 events
-            </div>
-        </div>
+        </aside>
 
-        <!-- Bulk Actions -->
-        <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-md mb-8 flex flex-wrap gap-4 items-center justify-between">
-            <div class="flex items-center gap-3">
-                <input type="checkbox" id="select-all" class="w-5 h-5 rounded border-slate-700 text-teal-600 focus:ring-teal-500 bg-slate-900 cursor-pointer">
-                <label for="select-all" class="text-sm font-semibold text-slate-300 cursor-pointer select-none">Select All Visible</label>
-                
-                <span class="text-slate-600 font-light mx-2">|</span>
-                
-                <label class="text-sm font-semibold text-slate-300">Bulk Action:</label>
-                <select id="bulk-action" class="bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-1.5 focus:ring-2 focus:ring-teal-500 text-sm font-semibold">
-                    <option value="add">Add to Main Directory</option>
-                    <option value="hide">Hide from Review List</option>
-                </select>
-                
-                <button id="apply-bulk" class="px-5 py-1.5 bg-teal-600 hover:bg-teal-500 active:bg-teal-700 text-white font-bold rounded-xl transition-colors text-sm shadow-md">
-                    Apply Action
-                </button>
+        <!-- Main Content Area -->
+        <div class="flex-1 min-w-0">
+            <!-- Controls -->
+            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-lg mb-4 flex flex-wrap gap-4 items-center justify-between">
+                <div class="flex gap-4 items-center">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-300 mb-1">Filter by Reason</label>
+                        <select id="reason-filter" class="bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-2 focus:ring-2 focus:ring-teal-500">
+                            <option value="">All Reasons</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-300 mb-1">Filter by City</label>
+                        <select id="city-filter" class="bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-2 focus:ring-2 focus:ring-teal-500 font-medium">
+                            <option value="">All Cities</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="text-slate-400 font-semibold" id="stats">
+                    Showing 0 of 0 events
+                </div>
             </div>
-            <div id="selection-counter" class="text-slate-400 text-sm font-medium">
-                0 items selected
-            </div>
-        </div>
 
-        <!-- Events List -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="events-grid">
-            <!-- Dynamic items go here -->
+            <!-- Bulk Actions -->
+            <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/60 shadow-md mb-8 flex flex-wrap gap-4 items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="select-all" class="w-5 h-5 rounded border-slate-700 text-teal-600 focus:ring-teal-500 bg-slate-900 cursor-pointer">
+                    <label for="select-all" class="text-sm font-semibold text-slate-300 cursor-pointer select-none">Select All Visible</label>
+                    
+                    <span class="text-slate-600 font-light mx-2">|</span>
+                    
+                    <label class="text-sm font-semibold text-slate-300">Bulk Action:</label>
+                    <select id="bulk-action" class="bg-slate-900 border border-slate-700 text-slate-100 rounded-xl px-4 py-1.5 focus:ring-2 focus:ring-teal-500 text-sm font-semibold">
+                        <option value="add">Add to Main Directory</option>
+                        <option value="hide">Hide from Review List</option>
+                    </select>
+                    
+                    <button id="apply-bulk" class="px-5 py-1.5 bg-teal-600 hover:bg-teal-500 active:bg-teal-700 text-white font-bold rounded-xl transition-colors text-sm shadow-md">
+                        Apply Action
+                    </button>
+                </div>
+                <div id="selection-counter" class="text-slate-400 text-sm font-medium">
+                    0 items selected
+                </div>
+            </div>
+
+            <!-- Events List -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="events-grid">
+                <!-- Dynamic items go here -->
+            </div>
         </div>
     </main>
 
     <script>
         let allEvents = [];
         let activeEvents = [];
+        let selectedState = ""; // Track currently selected state
+
+        const stateNames = {
+            "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas", "CA": "California",
+            "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware", "FL": "Florida", "GA": "Georgia",
+            "HI": "Hawaii", "ID": "Idaho", "IL": "Illinois", "IN": "Indiana", "IA": "Iowa",
+            "KS": "Kansas", "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland",
+            "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi", "MO": "Missouri",
+            "MT": "Montana", "NE": "Nebraska", "NV": "Nevada", "NH": "New Hampshire", "NJ": "New Jersey",
+            "NM": "New Mexico", "NY": "New York", "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio",
+            "OK": "Oklahoma", "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina",
+            "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah", "VT": "Vermont",
+            "VA": "Virginia", "WA": "Washington", "WV": "West Virginia", "WI": "Wisconsin", "WY": "Wyoming"
+        };
 
         function isHidden(item) {
             if (item.hidden) return true;
@@ -103,6 +148,7 @@
                 activeEvents = allEvents;
                 
                 populateFilters();
+                renderStateSidebar();
                 renderEvents();
             } catch (err) {
                 console.error(err);
@@ -113,6 +159,74 @@
                     </div>
                 `;
             }
+        }
+
+        function renderStateSidebar() {
+            const stateCounts = {};
+            
+            activeEvents.forEach(item => {
+                if (isHidden(item)) return; // Only count unreviewed items
+                const state = (item.state || "Unknown").toUpperCase().trim();
+                stateCounts[state] = (stateCounts[state] || 0) + 1;
+            });
+
+            const stateListDiv = document.getElementById('state-list');
+            
+            // Get sorted list of states that have at least 1 waiting review, plus selectedState if it has 0
+            const statesWithItems = Object.keys(stateCounts).filter(st => stateCounts[st] > 0);
+            if (selectedState && !statesWithItems.includes(selectedState)) {
+                statesWithItems.push(selectedState);
+            }
+            
+            statesWithItems.sort((a, b) => {
+                const nameA = stateNames[a] || a;
+                const nameB = stateNames[b] || b;
+                return nameA.localeCompare(nameB);
+            });
+
+            const totalWaiting = Object.values(stateCounts).reduce((a, b) => a + b, 0);
+            document.getElementById('state-queue-total').textContent = totalWaiting;
+
+            let html = `
+                <button onclick="selectState('')" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center justify-between ${
+                    selectedState === '' 
+                    ? 'bg-teal-600 text-white font-bold shadow-md shadow-teal-900/30' 
+                    : 'bg-slate-900/50 hover:bg-slate-900 text-slate-300 hover:text-white border border-slate-700/50'
+                }">
+                    <span>🌐 All States</span>
+                    <span class="text-xs ${selectedState === '' ? 'bg-teal-700 text-white' : 'bg-slate-800 text-slate-400'} px-2 py-0.5 rounded-md font-bold">${totalWaiting}</span>
+                </button>
+            `;
+
+            statesWithItems.forEach(state => {
+                const count = stateCounts[state] || 0;
+                const fullName = stateNames[state] || state;
+                const isActive = selectedState === state;
+
+                html += `
+                    <button onclick="selectState('${state}')" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center justify-between ${
+                        isActive 
+                        ? 'bg-teal-600 text-white font-bold shadow-md shadow-teal-900/30' 
+                        : 'bg-slate-900/50 hover:bg-slate-900 text-slate-300 hover:text-white border border-slate-700/50'
+                    }">
+                        <span class="truncate pr-2">🇺🇸 <span class="font-bold mr-1">${state}</span> ${fullName}</span>
+                        <span class="text-xs ${isActive ? 'bg-teal-700 text-white' : 'bg-slate-800 text-slate-400'} px-2 py-0.5 rounded-md font-bold">${count}</span>
+                    </button>
+                `;
+            });
+
+            stateListDiv.innerHTML = html;
+        }
+
+        function selectState(state) {
+            selectedState = state;
+            
+            // Reset city filter since the cities will change when selecting a state
+            document.getElementById('city-filter').value = "";
+            
+            populateFilters();
+            renderStateSidebar();
+            renderEvents();
         }
 
         function populateFilters() {
@@ -127,7 +241,11 @@
 
             activeEvents.forEach(item => {
                 if (item.reason) reasons.add(item.reason);
-                if (item.city) cities.add(item.city);
+                
+                // If selectedState is set, only add cities from that state
+                if (!selectedState || (item.state && item.state.toUpperCase().trim() === selectedState)) {
+                    if (item.city) cities.add(item.city);
+                }
             });
 
             reasonSelect.innerHTML = '<option value="">All Reasons</option>';
@@ -139,7 +257,7 @@
             });
 
             citySelect.innerHTML = '<option value="">All Cities</option>';
-            cities.forEach(city => {
+            Array.from(cities).sort().forEach(city => {
                 const opt = document.createElement('option');
                 opt.value = city;
                 opt.textContent = city;
@@ -185,9 +303,10 @@
             const grid = document.getElementById('events-grid');
             
             const filtered = activeEvents.filter(item => {
+                const matchesState = selectedState ? (item.state && item.state.toUpperCase().trim() === selectedState) : true;
                 const matchesReason = reasonFilter ? item.reason === reasonFilter : true;
                 const matchesCity = cityFilter ? item.city === cityFilter : true;
-                return matchesReason && matchesCity;
+                return matchesState && matchesReason && matchesCity;
             });
 
             // Sort: Unhidden items first, Hidden items second (sorted A-Z)
@@ -203,8 +322,12 @@
                 return 0;
             });
 
-            const totalUnhiddenCount = activeEvents.filter(item => !isHidden(item)).length;
-            document.getElementById('stats').textContent = `Showing ${filtered.length} of ${activeEvents.length} events (${totalUnhiddenCount} unreviewed)`;
+            const stateLabel = selectedState ? ` in ${selectedState}` : "";
+            const stateEvents = selectedState 
+                ? activeEvents.filter(item => item.state && item.state.toUpperCase().trim() === selectedState)
+                : activeEvents;
+            const totalUnhiddenCount = stateEvents.filter(item => !isHidden(item)).length;
+            document.getElementById('stats').textContent = `Showing ${filtered.length} of ${stateEvents.length} events${stateLabel} (${totalUnhiddenCount} unreviewed)`;
 
             if (filtered.length === 0) {
                 grid.innerHTML = `
@@ -289,6 +412,7 @@
             }
             
             populateFilters();
+            renderStateSidebar();
             renderEvents();
             
             try {
@@ -367,6 +491,7 @@
                 }
 
                 populateFilters();
+                renderStateSidebar();
                 renderEvents();
                 alert(`Successfully completed bulk action: ${action === 'add' ? 'Added' : 'Hidden'} ${events.length} items.`);
             } catch (err) {
