@@ -404,5 +404,70 @@
     ],
     "notes": "An iconic Provincetown restaurant and cabaret hosting weekly drag brunches, live performances, and top-tier drag cabaret shows upstairs.",
     "verified_at": "2026-06-19"
+  },
+  {
+    "id": "bingo-ny-021",
+    "name": "Cherry's Drag Shows & Cabaret",
+    "venue": "Cherry's on the Bay",
+    "address": "158 Bayview Walk",
+    "city": "Cherry Grove",
+    "state": "NY",
+    "zip": "11782",
+    "latitude": 40.6599,
+    "longitude": -73.0898,
+    "phone": "631-597-7859",
+    "website": "https://cherrysonthebay.com",
+    "schedule": "Daily drag shows and weekend drag brunch",
+    "categories": [
+      "drag",
+      "lgbtq+",
+      "brunch",
+      "show"
+    ],
+    "notes": "The ultimate waterfront drag show and dining experience in Cherry Grove, featuring daily drag performances, cabaret acts, and weekend brunches.",
+    "verified_at": "2026-06-19"
+  },
+  {
+    "id": "bingo-ny-022",
+    "name": "Ice Palace Pool Parties & Drag Shows",
+    "venue": "The Ice Palace (Grove Hotel)",
+    "address": "1 Fire Island Blvd",
+    "city": "Cherry Grove",
+    "state": "NY",
+    "zip": "11782",
+    "latitude": 40.6601,
+    "longitude": -73.0895,
+    "phone": "631-597-6600",
+    "website": "https://www.grovehotel.com",
+    "schedule": "Weekend drag shows and pool show events",
+    "categories": [
+      "drag",
+      "lgbtq+",
+      "show"
+    ],
+    "notes": "The historic epicenter of Cherry Grove nightlife since the 1950s, hosting pool parties, Miss Fire Island pageants, and weekly drag shows.",
+    "verified_at": "2026-06-19"
+  },
+  {
+    "id": "bingo-ny-023",
+    "name": "Low Tea & Drag Events at The Blue Whale",
+    "venue": "The Blue Whale (Fire Island Pines)",
+    "address": "37 Fire Island Blvd",
+    "city": "Fire Island Pines",
+    "state": "NY",
+    "zip": "11782",
+    "latitude": 40.6644,
+    "longitude": -73.0673,
+    "phone": "631-597-6500",
+    "website": "https://pinesfi.com",
+    "schedule": "Weekly drag brunch and daily tea events",
+    "categories": [
+      "drag",
+      "lgbtq+",
+      "brunch",
+      "show"
+    ],
+    "notes": "Famous for the legendary 'Low Tea' afternoon dance parties, drag brunches, and weekly themed cabaret performances in Fire Island Pines.",
+    "verified_at": "2026-06-19"
   }
 ]
